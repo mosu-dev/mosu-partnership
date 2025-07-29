@@ -1,0 +1,55 @@
+name: Deploy AWS Lambda Function
+
+on:
+    pull_request:
+        branches:
+            - main
+            - develop
+        types:
+            - closed
+        paths:
+            - "partnership-api-*"
+    workflow_dispatch:
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        env:
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+        strategy:
+            matrix:
+                lambda:
+                    - name: "mosu-partnership-api-register"
+                      path: "partnership-api-register/src"
+                      aws_function_name: "mosu-partnership-api-register"
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v3
+              with:
+                  aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.AWS_REGION }}
+
+            - name: Build and Package Lambda Function
+              run: |
+                  cd ${{ github.workspace }}/${{ matrix.lambda.path }}
+                  zip -r ../../${{ matrix.lambda.aws_function_name }}.zip .
+
+            - name: Setup Environment Variables
+              run: |
+                  aws lambda update-function-configuration \
+                    --function-name ${{ matrix.lambda.aws_function_name }}
+
+            - name: Deploy Lambda Function
+              run: |
+                  aws lambda update-function-code \
+                    --function-name ${{ matrix.lambda.aws_function_name }} \
+                    --zip-file fileb://${{ github.workspace }}/${{ matrix.lambda.aws_function_name }}.zip

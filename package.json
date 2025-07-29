@@ -1,0 +1,16 @@
+{
+    "name": "@mosu/partnership",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/mosu-dev/mosu-partnership.git",
+    "author": "toothlessdev <toothless042@gmail.com>",
+    "license": "MIT",
+    "private": true,
+    "workspaces": [
+        "partnership-app",
+        "partnership-api-register"
+    ],
+    "scripts": {
+        "app": "yarn workspace @mosu/partnership-app"
+    }
+}
