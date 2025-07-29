@@ -3,40 +3,46 @@ import html from "remark-html";
 
 import rawRegisterInfoDocs from "@mosu/partnership-docs/모의수능 신청.md";
 import { useLayoutEffect, useState } from "react";
+import { useRegisterDate } from "./useRegisterDate";
 
-export type UseLoadRegisterInfoDocsOptions = {
-    examYear: string;
-    examMonth: string;
-    examDate: string;
-    examDay: string;
+export const useLoadRegisterInfoDocs = () => {
+    const { examDate, examDay, examMonth, examYear } = useRegisterDate();
 
-    refundDueMonth: string;
-    refundDueDate: string;
-    refundDueTime: string;
-};
-
-export const useLoadRegisterInfoDocs = ({ examYear, examMonth, examDate, examDay, refundDueMonth, refundDueDate, refundDueTime }: UseLoadRegisterInfoDocsOptions) => {
+    const [isPending, setIsPending] = useState(true);
     const [registerInfoDocs, setRegisterInfoDocs] = useState<string>("");
 
     useLayoutEffect(() => {
         (async () => {
-            const replacedRegisterInfoDocs = await remark()
-                .use(html)
-                .process(
-                    rawRegisterInfoDocs
-                        .replaceAll("{{examYear}}", examYear)
-                        .replaceAll("{{examMonth}}", examMonth)
-                        .replaceAll("{{examDate}}", examDate)
-                        .replaceAll("{{examDay}}", examDay)
-                        .replaceAll("{{refundDueMonth}}", refundDueMonth)
-                        .replaceAll("{{refundDueDate}}", refundDueDate)
-                        .replaceAll("{{refundDueTime}}", refundDueTime)
-                );
-            setRegisterInfoDocs(replacedRegisterInfoDocs.toString());
+            try {
+                const refundDate = new Date(examYear, examMonth - 1, examDate);
+                refundDate.setDate(refundDate.getDate() - 7);
+
+                const refundDueMonth = refundDate.getMonth() + 1;
+                const refundDueDate = refundDate.getDate();
+
+                const replacedRegisterInfoDocs = await remark()
+                    .use(html)
+                    .process(
+                        rawRegisterInfoDocs
+                            .replaceAll("{{examYear}}", examYear.toString())
+                            .replaceAll("{{examMonth}}", examMonth.toString())
+                            .replaceAll("{{examDate}}", examDate.toString())
+                            .replaceAll("{{examDay}}", examDay)
+                            .replaceAll("{{refundDueMonth}}", refundDueMonth.toString())
+                            .replaceAll("{{refundDueDate}}", refundDueDate.toString())
+                            .replaceAll("{{refundDueTime}}", "23:59:59")
+                    );
+                setRegisterInfoDocs(replacedRegisterInfoDocs.toString());
+            } catch (error) {
+                console.error("문서 처리 중 오류:", error);
+            } finally {
+                setIsPending(false);
+            }
         })();
-    }, [examDate, examDay, examMonth, examYear, refundDueDate, refundDueMonth, refundDueTime, registerInfoDocs]);
+    }, [examDate, examDay, examMonth, examYear]);
 
     return {
+        isPending,
         registerInfoDocs,
     };
 };
