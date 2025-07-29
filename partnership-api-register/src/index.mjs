@@ -23,7 +23,10 @@ export async function handler(event) {
     try {
         const command = new PutCommand({
             TableName: MOSU_PARTNERSHIP_TABLE_NAME,
-            Item: payload,
+            Item: {
+                id: crypto.randomUUID(),
+                ...payload,
+            },
         });
         await docClient.send(command);
 
