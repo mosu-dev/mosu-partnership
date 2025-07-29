@@ -1,4 +1,5 @@
-import type { S3_FOLDER_NAMES } from "@/constants/s3Folder";
+
+import type { S3_FOLDER_NAMES } from "@/apps/constants/s3Folder";
 import { useRef, useState, useCallback } from "react";
 
 const UPLOAD_IMAGE_BASE_URL = import.meta.env.VITE_BASE_URL as string;

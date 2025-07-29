@@ -15,7 +15,7 @@ export default function HomePage() {
     return (
         <Fragment>
             <article
-                className="bg-white my-4 p-4"
+                className="bg-white my-4 p-4 prose rounded-md border border-gray-200"
                 dangerouslySetInnerHTML={{
                     __html: registerInfoDocs,
                 }}
