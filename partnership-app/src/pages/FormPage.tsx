@@ -19,9 +19,13 @@ import { subject } from "@/constants/subjects";
 import { useRegisterDate } from "@/hooks/useRegisterDate";
 import { regions } from "@/constants/regions";
 import { ErrorMessage } from "@/apps/ui/ErrorMessage";
+import { useUploadProfileImage } from "@/hooks/useImageUpload";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function FormPage() {
     const { examDate, examMonth, examYear } = useRegisterDate();
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -78,36 +82,40 @@ export default function FormPage() {
         setValue("password", value);
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0] || null;
-        if (file) {
-            setValue("admissionTicket", {
-                fileName: file.name,
-                s3Key: "temp",
-            });
-        }
-    };
-
     const onSubmit = async (data: RegisterFormSchemaType) => {
         try {
             await requestRegister(data);
+            navigate(`/success?${searchParams.toString()}`);
         } catch (error) {
             console.error("Form submission error:", error);
         }
     };
 
+    const {
+        FileInput,
+        isPending: isUploading,
+        error: uploadError,
+        previewUrl,
+    } = useUploadProfileImage({
+        onSuccess: (data) => {
+            setValue("admissionTicket", {
+                fileName: data.fileName,
+                s3Key: data.s3Key,
+            });
+        },
+    });
+
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <input type="hidden" {...register("examDate")} value="2024-12-01" />
-                {/* 제휴 업체명 */}
+
                 <div className="space-y-2">
                     <Label htmlFor="partnerCompany">제휴 업체명 *</Label>
                     <Input id="partnerCompany" {...register("orgName")} placeholder="제휴 업체명을 입력해주세요" />
                     {errors.orgName && <ErrorMessage>{errors.orgName.message}</ErrorMessage>}
                 </div>
 
-                {/* 본인확인 비밀번호 */}
                 <div className="space-y-2">
                     <Label htmlFor="password">본인확인 비밀번호 (4자리) *</Label>
                     <Input
@@ -122,14 +130,12 @@ export default function FormPage() {
                     <p className="text-sm text-gray-500">입금확인을 위한 비밀번호로 원하시는 4자리 숫자를 적어주세요</p>
                 </div>
 
-                {/* 이름 */}
                 <div className="space-y-2">
                     <Label htmlFor="name">이름 *</Label>
                     <Input id="name" {...register("userName")} placeholder="성명을 입력해주세요" />
                     {errors.userName && <ErrorMessage>{errors.userName.message}</ErrorMessage>}
                 </div>
 
-                {/* 성별 */}
                 <div className="space-y-2">
                     <Label>성별 *</Label>
                     <Select
@@ -149,7 +155,6 @@ export default function FormPage() {
                     {errors.gender && <ErrorMessage>{errors.gender.message}</ErrorMessage>}
                 </div>
 
-                {/* 생년월일 */}
                 <div className="space-y-2">
                     <Label>생년월일 *</Label>
                     <Popover>
@@ -183,7 +188,6 @@ export default function FormPage() {
                     {errors.birth && <ErrorMessage>{errors.birth.message}</ErrorMessage>}
                 </div>
 
-                {/* 전화번호 */}
                 <div className="space-y-2">
                     <Label htmlFor="phoneNumber">전화번호 *</Label>
                     <Input
@@ -196,7 +200,6 @@ export default function FormPage() {
                     {errors.phoneNumber && <ErrorMessage>{errors.phoneNumber.message}</ErrorMessage>}
                 </div>
 
-                {/* 탐구 1 */}
                 <div className="space-y-2">
                     <Label>탐구 1 *</Label>
                     <Select
@@ -219,7 +222,6 @@ export default function FormPage() {
                     {errors.subject && <ErrorMessage>{errors.subject.message}</ErrorMessage>}
                 </div>
 
-                {/* 탐구 2 */}
                 <div className="space-y-2">
                     <Label>탐구 2 *</Label>
                     <Select
@@ -244,7 +246,6 @@ export default function FormPage() {
                     {errors.subject2 && <ErrorMessage>{errors.subject2.message}</ErrorMessage>}
                 </div>
 
-                {/* 점심 도시락 신청 여부 */}
                 <div className="space-y-3">
                     <Label>점심 도시락 신청 여부 *</Label>
                     <RadioGroup
@@ -265,7 +266,6 @@ export default function FormPage() {
                     {errors.lunch && <ErrorMessage>{errors.lunch.message}</ErrorMessage>}
                 </div>
 
-                {/* 응시 지역 */}
                 <div className="space-y-2">
                     <Label>응시 지역 *</Label>
                     <Select
@@ -288,28 +288,25 @@ export default function FormPage() {
                     {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
                 </div>
 
-                {/* 응시학교명 */}
                 <div className="space-y-2">
                     <Label htmlFor="testSchool">응시학교명 *</Label>
                     <Input id="testSchool" {...register("schoolName")} placeholder="응시할 학교명을 입력해주세요" />
                     {errors.schoolName && <ErrorMessage>{errors.schoolName.message}</ErrorMessage>}
                 </div>
 
-                {/* 수험표 사진 등록 */}
                 <div className="space-y-2">
                     <Label htmlFor="examPhoto">수험표 사진 등록 *</Label>
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                        <input
-                            id="examPhoto"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            className="hidden"
-                        />
-                        <Label htmlFor="examPhoto" className="cursor-pointer">
+                        <FileInput />
+                        <div
+                            className="cursor-pointer"
+                            onClick={() => (document.querySelector('input[type="file"]') as HTMLInputElement)?.click()}
+                        >
                             <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                             <div className="text-sm text-gray-600">
-                                {watchField.admissionTicket.fileName ? (
+                                {isUploading ? (
+                                    <span className="text-blue-600">업로드 중...</span>
+                                ) : watchField.admissionTicket.fileName ? (
                                     <span className="text-green-600">{watchField.admissionTicket.fileName}</span>
                                 ) : (
                                     <>
@@ -319,12 +316,21 @@ export default function FormPage() {
                                 )}
                             </div>
                             <p className="text-xs text-gray-500 mt-2">JPG, PNG 파일만 업로드 가능</p>
-                        </Label>
+                        </div>
+                        {previewUrl && (
+                            <div className="mt-4">
+                                <img
+                                    src={previewUrl}
+                                    alt="수험표 미리보기"
+                                    className="mx-auto max-w-xs max-h-48 object-contain rounded border"
+                                />
+                            </div>
+                        )}
                     </div>
+                    {uploadError && <ErrorMessage>{uploadError}</ErrorMessage>}
                     {errors.admissionTicket && <ErrorMessage>{errors.admissionTicket.message}</ErrorMessage>}
                 </div>
 
-                {/* 제출 버튼 */}
                 <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 mb-4" disabled={isPending}>
                     {isPending ? "제출 중..." : "신청서 제출"}
                 </Button>
