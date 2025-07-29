@@ -13,8 +13,12 @@ const docClient = DynamoDBDocumentClient.from(client);
  * @returns {Promise<import("aws-lambda").APIGatewayProxyResult>}
  */
 export async function handler(event) {
-    const payload = JSON.parse(event.body || "{}");
-
+    let payload;
+    try {
+        payload = JSON.parse(event.body || "{}");
+    } catch {
+        return BaseResponse.of(400, "요청 본문이 JSON 형식이 아닙니다.");
+    }
     if (!isValidPayload(payload)) {
         return BaseResponse.of(400, "잘못된 요청입니다. 필수 필드가 누락되었거나 잘못되었습니다.", {
             data: payload,
