@@ -16,12 +16,12 @@ import { RegisterFormSchema, type RegisterFormSchemaType } from "@/models/Regist
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRegister } from "@/hooks/useRegister";
 import { subject } from "@/constants/subjects";
-
-const ErrorMessage = ({ children }: { children?: string }) => {
-    return <p className="text-sm text-red-600">{children}</p>;
-};
+import { useRegisterDate } from "@/hooks/useRegisterDate";
+import { regions } from "@/constants/regions";
+import { ErrorMessage } from "@/apps/ui/ErrorMessage";
 
 export default function FormPage() {
+    const { examDate, examMonth, examYear } = useRegisterDate();
     const {
         register,
         handleSubmit,
@@ -32,7 +32,7 @@ export default function FormPage() {
         resolver: zodResolver(RegisterFormSchema),
         mode: "onChange",
         defaultValues: {
-            examDate: "2024-12-01",
+            examDate: `${examYear}-${examMonth}-${examDate}`,
             orgName: "",
             password: "",
             userName: "",
@@ -95,26 +95,6 @@ export default function FormPage() {
             console.error("Form submission error:", error);
         }
     };
-
-    const regions = [
-        "서울",
-        "부산",
-        "대구",
-        "인천",
-        "광주",
-        "대전",
-        "울산",
-        "세종",
-        "경기",
-        "강원",
-        "충북",
-        "충남",
-        "전북",
-        "전남",
-        "경북",
-        "경남",
-        "제주",
-    ];
 
     return (
         <div>
