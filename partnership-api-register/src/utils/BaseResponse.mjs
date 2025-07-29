@@ -1,14 +1,9 @@
 export class BaseResponse {
-    constructor(statusCode, body) {
-        this.statusCode = statusCode;
-        this.body = body;
-    }
-
-    /**
-     * @param {Number} statusCode
-     * @param {Record<string,unknown>} body
-     */
-    static of(statusCode, body) {
-        return new BaseResponse(statusCode, body);
+    static of(statusCode, message, { data }) {
+        return {
+            statusCode,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: statusCode, message, data }),
+        };
     }
 }
