@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "checkJs": true,
+        "target": "es2022",
+        "module": "es2022",
+        "moduleResolution": "node",
+        "allowJs": true,
+        "noEmit": true,
+
+        "strict": false,
+
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true,
+        "noUncheckedIndexedAccess": false
+    },
+    "include": ["**/*.js", "**/*.mjs"],
+    "exclude": ["node_modules"]
+}
