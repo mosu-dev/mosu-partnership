@@ -4,14 +4,15 @@ import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { isValidPayload } from "./utils/isValidPayload.mjs";
 
 const MOSU_PARTNERSHIP_TABLE_NAME = "mosu-partnership";
+
+const client = new DynamoDBClient({});
+const docClient = DynamoDBDocumentClient.from(client);
+
 /**
  * @param {import("aws-lambda").APIGatewayEvent} event
  * @returns {Promise<import("aws-lambda").APIGatewayProxyResult>}
  */
 export async function handler(event) {
-    const client = new DynamoDBClient({});
-    const docClient = DynamoDBDocumentClient.from(client);
-
     const payload = JSON.parse(event.body || "{}");
 
     if (!isValidPayload(payload)) {
