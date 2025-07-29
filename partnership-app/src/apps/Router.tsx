@@ -4,6 +4,7 @@ import HomePage from "@/pages/HomePage";
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import ErrorBoundary from "./ui/ErrorBoundary";
+import SubmitSuccessPage from "@/pages/SubmitSuccessPage";
 
 const routes = createRoutesFromElements(
     <Fragment>
@@ -17,6 +18,7 @@ const routes = createRoutesFromElements(
                 }
             />
             <Route path="/form" element={<FormPage />} />
+            <Route path="/success" element={<SubmitSuccessPage />} />
         </Route>
     </Fragment>
 );
