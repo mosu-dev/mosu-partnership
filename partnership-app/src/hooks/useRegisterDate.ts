@@ -23,14 +23,12 @@ export const useRegisterDate = () => {
     const [searchParams] = useSearchParams();
 
     const exam = searchParams.get("date") || "";
-    console.log("exam : ", exam);
 
     if (!isValidDateFormat(exam)) {
         throw new Error("날짜는 YYYY-MM-DD 형식이어야 합니다.");
     }
 
     const [examYear, examMonth, examDate] = exam.split("-").map(Number);
-    console.log("examYear, examMonth, examDate : ", examYear, examMonth, examDate);
 
     if (!isValidDate(examYear, examMonth, examDate)) {
         throw new Error("유효하지 않은 날짜입니다.");
