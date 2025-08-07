@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { BANK_ENUMS } from "../constants/bankAlias";
+import { REGEX_EMAIL } from "./VirtualAccountFormSchema";
 
 export const SUBJECT_VALUES = [
     "생활과 윤리",
@@ -46,6 +48,19 @@ export const RegisterPartnerFormSchema = z.object({
         fileName: z.string(),
         s3Key: z.string(),
     }),
+
+    bankAlias: z.enum(BANK_ENUMS, {
+        message: "입금 은행을 선택해주세요.",
+    }),
+
+    email: z
+        .string()
+        .regex(REGEX_EMAIL, {
+            message: "올바른 이메일 형식이 아닙니다.",
+        })
+        .min(1, {
+            message: "이메일을 입력해주세요.",
+        }),
 });
 
 export type RegisterPartnerFormSchemaType = z.infer<typeof RegisterPartnerFormSchema>;
