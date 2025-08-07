@@ -1,15 +1,15 @@
-import type { RegisterFormSchemaType } from "@/apps/models/RegisterFormSchema";
 import { ErrorMessage } from "@/apps/ui/ErrorMessage";
 import { useFormContext } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import type { RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
 
 export const PhoneNumberField = () => {
     const {
         watch,
         setValue,
         formState: { errors },
-    } = useFormContext<RegisterFormSchemaType>();
+    } = useFormContext<RegisterPartnerFormSchemaType>();
 
     const formatPhoneNumber = (value: string) => {
         const numbers = value.replace(/[^\d]/g, "");

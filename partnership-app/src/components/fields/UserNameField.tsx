@@ -2,13 +2,13 @@ import { ErrorMessage } from "@/apps/ui/ErrorMessage";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useFormContext } from "react-hook-form";
-import type { RegisterFormSchemaType } from "@/apps/models/RegisterFormSchema";
+import type { RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
 
 export const UserNameField = () => {
     const {
         register,
         formState: { errors },
-    } = useFormContext<RegisterFormSchemaType>();
+    } = useFormContext<RegisterPartnerFormSchemaType>();
 
     return (
         <div className="space-y-2">

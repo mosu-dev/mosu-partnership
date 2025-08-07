@@ -1,15 +1,16 @@
 import { ErrorMessage } from "@/apps/ui/ErrorMessage";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import type { RegisterFormSchemaType } from "@/apps/models/RegisterFormSchema";
+
 import { useFormContext } from "react-hook-form";
+import type { RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
 
 export const LunchField = () => {
     const {
         watch,
         setValue,
         formState: { errors },
-    } = useFormContext<RegisterFormSchemaType>();
+    } = useFormContext<RegisterPartnerFormSchemaType>();
 
     return (
         <div className="space-y-3">

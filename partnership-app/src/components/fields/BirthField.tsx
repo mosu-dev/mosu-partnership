@@ -4,17 +4,18 @@ import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { ErrorMessage } from "@/apps/ui/ErrorMessage";
-import type { RegisterFormSchemaType } from "@/apps/models/RegisterFormSchema";
+
 import { useFormContext } from "react-hook-form";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
+import type { RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
 
 export const BirthField = () => {
     const {
         watch,
         setValue,
         formState: { errors },
-    } = useFormContext<RegisterFormSchemaType>();
+    } = useFormContext<RegisterPartnerFormSchemaType>();
 
     const formatKoreaTime = (date?: Date) => {
         const krDate = date?.toLocaleDateString("ko-KR", {

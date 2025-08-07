@@ -3,15 +3,13 @@ import { Button } from "@/components/ui/button";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRegister } from "@/hooks/useRegister";
 
 import { useRegisterDate } from "@/hooks/useRegisterDate";
 
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { type RegisterFormSchemaType, RegisterFormSchema } from "@/apps/models/RegisterFormSchema";
+
 import { OrganizationNameField } from "@/components/fields/OrganizationNameField";
 import { ExamDateField } from "@/components/fields/ExamDateField";
-import { IdentificationField } from "@/components/fields/IdentificationField";
 import { UserNameField } from "@/components/fields/UserNameField";
 import { GenderField } from "@/components/fields/GenderField";
 import { BirthField } from "@/components/fields/BirthField";
@@ -21,53 +19,50 @@ import { LunchField } from "@/components/fields/LunchField";
 import { ExamAreaField } from "@/components/fields/ExamAreaField";
 import { ExamSchoolField } from "@/components/fields/ExamSchoolField";
 import { AdmissionTicketField } from "@/components/fields/AdmissionTicketField";
+import { RegisterPartnerFormSchema, type RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
+import { Spinner } from "@/apps/ui/Spinner";
+import { useRegisterGuest } from "@/hooks/useRegisterGuest";
+import { useEffect } from "react";
 
 export default function FormPage() {
     const { examDate, examMonth, examYear } = useRegisterDate();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const methods = useForm<RegisterFormSchemaType>({
-        resolver: zodResolver(RegisterFormSchema),
+    const methods = useForm<RegisterPartnerFormSchemaType>({
+        resolver: zodResolver(RegisterPartnerFormSchema),
         mode: "onChange",
         defaultValues: {
-            examDate: `${examYear}-${examMonth}-${examDate}`,
-            orgName: "",
-            password: "",
-            userName: "",
-            gender: "MALE",
-            birth: "",
-            phoneNumber: "",
-            subject: "",
-            subject2: "",
-            lunch: true,
-            area: "",
-            schoolName: "",
-            admissionTicket: {
-                fileName: "",
-                s3Key: "",
+            examApplication: {
+                examId: -1,
+                isLunchChecked: true,
             },
         },
     });
 
-    const { requestRegister, isPending } = useRegister();
+    const { isPending } = useRegisterGuest();
 
-    const onSubmit = async (data: RegisterFormSchemaType) => {
+    const onSubmit = async (data: RegisterPartnerFormSchemaType) => {
         try {
-            await requestRegister(data);
             navigate(`/success?${searchParams.toString()}`);
         } catch (error) {
             console.error("Form submission error:", error);
         }
     };
 
+    const watchElements = methods.watch();
+    console.log(watchElements);
+
     return (
         <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-                <ExamDateField />
+                <fieldset className="flex gap-2 w-full">
+                    <ExamDateField />
+                    <ExamAreaField />
+                    <ExamSchoolField />
+                </fieldset>
+
                 <OrganizationNameField />
-                <IdentificationField />
-                <ExamAreaField />
-                <ExamSchoolField />
+
                 <UserNameField />
                 <GenderField />
                 <BirthField />
@@ -76,9 +71,10 @@ export default function FormPage() {
                 <LunchField />
 
                 <AdmissionTicketField />
+                <p className="text-red-400">*입금 완료 후 신청서를 제출하세요</p>
 
-                <Button type="submit" className="h-[48px] w-full mb-4" disabled={isPending}>
-                    {isPending ? "제출 중..." : "신청서 제출"}
+                <Button type="submit" className="h-[48px] w-full mb-4">
+                    {isPending ? "신청하기" : <Spinner />}
                 </Button>
             </form>
         </FormProvider>

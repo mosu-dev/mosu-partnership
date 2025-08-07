@@ -3,15 +3,16 @@ import { Label } from "../ui/label";
 import { subject } from "@/apps/constants/subjects";
 import { ErrorMessage } from "@/apps/ui/ErrorMessage";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../ui/select";
-import type { RegisterFormSchemaType } from "@/apps/models/RegisterFormSchema";
+
 import { useFormContext } from "react-hook-form";
+import type { RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
 
 export const SubjectField = () => {
     const {
         watch,
         setValue,
         formState: { errors },
-    } = useFormContext<RegisterFormSchemaType>();
+    } = useFormContext<RegisterPartnerFormSchemaType>();
 
     return (
         <Fragment>

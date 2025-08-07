@@ -1,16 +1,17 @@
 import { Upload } from "lucide-react";
 import { Label } from "../ui/label";
 import { ErrorMessage } from "@/apps/ui/ErrorMessage";
-import type { RegisterFormSchemaType } from "@/apps/models/RegisterFormSchema";
+
 import { useFormContext } from "react-hook-form";
 import { useUploadProfileImage } from "@/hooks/useImageUpload";
 import { Spinner } from "@/apps/ui/Spinner";
+import type { RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
 
 export const AdmissionTicketField = () => {
     const {
         setValue,
         formState: { errors },
-    } = useFormContext<RegisterFormSchemaType>();
+    } = useFormContext<RegisterPartnerFormSchemaType>();
 
     const {
         FileInput,
