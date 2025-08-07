@@ -1,5 +1,4 @@
 import { api } from "@/apps/constants/api";
-import type { RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
 import { useMutation } from "@tanstack/react-query";
 
 export type RegisterGuestRequestBody = {
@@ -23,7 +22,7 @@ export type RegisterGuestResponseBody = {
     applicationId: number;
 };
 
-export const registerGuestRequest = async (payload: RegisterPartnerFormSchemaType) => {
+export const registerGuestRequest = async (payload: RegisterGuestRequestBody) => {
     const { data: response } = await api().post<BaseResponse<RegisterGuestResponseBody>>(
         "/applications/guest",
         payload

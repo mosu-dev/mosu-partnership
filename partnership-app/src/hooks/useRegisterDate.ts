@@ -11,12 +11,16 @@ const isValidDateFormat = (dateString: string): boolean => {
 export const useRegisterDate = () => {
     const [searchParams] = useSearchParams();
 
-    const exam = searchParams.get("date") || "";
+    const dateValidation = useMemo(() => {
+        const exam = searchParams.get("date") || "";
 
-    if (!exam) throw new MarkdownEmptyDateException();
-    if (!isValidDateFormat(exam)) throw new MarkdownInvalidDateException();
+        if (!exam) throw new MarkdownEmptyDateException();
+        if (!isValidDateFormat(exam)) throw new MarkdownInvalidDateException();
 
-    const [examYear, examMonth, examDate] = exam.split("-").map(Number);
+        return exam;
+    }, [searchParams]);
+
+    const [examYear, examMonth, examDate] = dateValidation.split("-").map(Number);
 
     const examDay = useMemo(() => {
         const date = new Date(examYear, examMonth - 1, examDate);
