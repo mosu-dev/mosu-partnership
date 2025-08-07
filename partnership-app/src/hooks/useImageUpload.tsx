@@ -1,8 +1,6 @@
-
+import { api } from "@/apps/constants/api";
 import type { S3_FOLDER_NAMES } from "@/apps/constants/s3Folder";
 import { useRef, useState, useCallback } from "react";
-
-const UPLOAD_IMAGE_BASE_URL = import.meta.env.VITE_BASE_URL as string;
 
 export type S3FolderName = keyof typeof S3_FOLDER_NAMES;
 
@@ -15,17 +13,17 @@ export async function uploadFileToS3(file: File, folderName: S3FolderName) {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch(`${UPLOAD_IMAGE_BASE_URL}/s3?folderName=${encodeURIComponent(folderName)}`, {
-        method: "POST",
-        body: formData,
-    });
+    const { data: response } = await api().post<BaseResponse<UploadFileToS3Response>>(
+        `/s3?folderName=${encodeURIComponent(folderName)}`,
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        }
+    );
 
-    if (!response.ok) {
-        throw new Error("Failed to upload file to S3");
-    }
-
-    const result = await response.json();
-    return result.data;
+    return response.data;
 }
 
 type PENDING = "IDLE" | "PENDING" | "SUCCESS" | "ERROR";
