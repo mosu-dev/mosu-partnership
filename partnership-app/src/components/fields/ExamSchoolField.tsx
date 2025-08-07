@@ -7,8 +7,11 @@ import type { RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartne
 import { useGetExamSchools } from "@/hooks/useGetExamSchools";
 import { Spinner } from "@/apps/ui/Spinner";
 import { ErrorMessage } from "@/apps/ui/ErrorMessage";
+import { useRegisterDate } from "@/hooks/useRegisterDate";
 
 export const ExamSchoolField = () => {
+    const { formattedDate } = useRegisterDate();
+
     const {
         watch,
         setValue,
@@ -36,11 +39,14 @@ export const ExamSchoolField = () => {
                             <Spinner />
                         </SelectItem>
                     ) : (
-                        data?.map((data) => (
-                            <SelectItem key={data.id} value={data.id.toString()}>
-                                {data.schoolName}
-                            </SelectItem>
-                        ))
+                        data?.map(
+                            (data) =>
+                                data.examDate === formattedDate && (
+                                    <SelectItem key={data.id} value={data.id.toString()}>
+                                        {data.schoolName}
+                                    </SelectItem>
+                                )
+                        )
                     )}
                 </SelectContent>
             </Select>

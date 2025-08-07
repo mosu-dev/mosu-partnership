@@ -32,5 +32,10 @@ export const useRegisterDate = () => {
         examMonth,
         examDate,
         examDay,
+        formattedDate: [
+            examYear.toString(),
+            examMonth.toString().padStart(2, "0"),
+            examDate.toString().padStart(2, "0"),
+        ].join("-"),
     };
 };
