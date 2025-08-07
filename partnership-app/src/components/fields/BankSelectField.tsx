@@ -14,7 +14,7 @@ export const BankSelectField = () => {
 
     return (
         <fieldset className="space-y-2 w-full">
-            <Label required>입금 은행</Label>
+            <Label required>가상계좌 은행 선택</Label>
             <Select
                 value={watch("bankAlias")}
                 onValueChange={(value) => {
@@ -22,7 +22,7 @@ export const BankSelectField = () => {
                 }}
             >
                 <SelectTrigger className="w-full">
-                    <SelectValue placeholder="입금 은행명을 선택해주세요" />
+                    <SelectValue placeholder="입금할 가상계좌 은행을 선택해주세요." />
                 </SelectTrigger>
                 <SelectContent>
                     {banks.map((bank) => (

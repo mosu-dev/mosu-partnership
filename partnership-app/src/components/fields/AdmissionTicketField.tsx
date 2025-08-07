@@ -26,9 +26,7 @@ export const AdmissionTicketField = () => {
 
     return (
         <div className="space-y-2">
-            <Label htmlFor="examPhoto" required>
-                수험표 사진 등록
-            </Label>
+            <Label htmlFor="examPhoto">수험표 사진 등록</Label>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                 <FileInput />
                 {isPending === "IDLE" ? (
@@ -42,7 +40,10 @@ export const AdmissionTicketField = () => {
                 ) : isPending === "PENDING" ? (
                     <Spinner />
                 ) : (
-                    <div className="mt-4">
+                    <div
+                        className="mt-4 hover:cursor-pointer"
+                        onClick={() => (document.querySelector('input[type="file"]') as HTMLInputElement)?.click()}
+                    >
                         <img
                             src={previewUrl}
                             alt="수험표 미리보기"
