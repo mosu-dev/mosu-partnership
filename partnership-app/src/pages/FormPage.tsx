@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 
 import { FormProvider, useForm } from "react-hook-form";
@@ -7,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRegisterDate } from "@/hooks/useRegisterDate";
 
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { OrganizationNameField } from "@/components/fields/OrganizationNameField";
 import { ExamDateField } from "@/components/fields/ExamDateField";
@@ -23,40 +22,80 @@ import { AdmissionTicketField } from "@/components/fields/AdmissionTicketField";
 import { RegisterPartnerFormSchema, type RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
 import { Spinner } from "@/apps/ui/Spinner";
 import { useRegisterGuest } from "@/hooks/useRegisterGuest";
-import { useEffect } from "react";
+import { BankSelectField } from "@/components/fields/BankSelectField";
+import { useVirtualAccount } from "@/hooks/useVirtualAccount";
+import { EmailField } from "@/components/fields/EmailField";
 
 export default function FormPage() {
-    const { examDate, examMonth, examYear } = useRegisterDate();
-    const [searchParams] = useSearchParams();
+    const { examYear, examMonth, examDate } = useRegisterDate();
     const navigate = useNavigate();
+
     const methods = useForm<RegisterPartnerFormSchemaType>({
         resolver: zodResolver(RegisterPartnerFormSchema),
         mode: "onChange",
         defaultValues: {
+            examDate: {
+                year: examYear,
+                month: examMonth,
+                date: examDate,
+            },
             examApplication: {
                 examId: -1,
                 isLunchChecked: true,
             },
+            birth: "",
+            phoneNumber: "",
+            subjects: ["", ""],
+            admissionTicket: {
+                s3Key: "",
+                fileName: "",
+            },
+            email: "",
         },
     });
 
-    const { isPending } = useRegisterGuest();
+    const { isPending: isRegisterGuestPending, mutateAsync: registerGuest } = useRegisterGuest();
+    const { isPending: isSignVirtualAccountPending, mutateAsync: signVirtualAccount } = useVirtualAccount();
+
+    const isPending = isRegisterGuestPending || isSignVirtualAccountPending;
 
     const onSubmit = async (data: RegisterPartnerFormSchemaType) => {
-        try {
-            navigate(`/success?${searchParams.toString()}`);
-        } catch (error) {
-            console.error("Form submission error:", error);
-        }
-    };
+        const registerGuestResponse = await registerGuest({
+            orgName: data.orgName,
+            gender: data.gender,
+            userName: data.userName,
+            birth: data.birth,
+            phoneNumber: data.phoneNumber,
+            examApplication: {
+                examId: data.examApplication.examId,
+                isLunchChecked: data.examApplication.isLunchChecked,
+            },
+            subjects: data.subjects,
+            admissionTicket: {
+                fileName: data.admissionTicket.fileName,
+                s3Key: data.admissionTicket.s3Key,
+            },
+        });
 
-    const watchElements = methods.watch();
-    console.log(watchElements);
+        const signVirtualAccountResponse = await signVirtualAccount({
+            applicationId: registerGuestResponse.applicationId,
+            customerName: data.userName,
+            alias: data.bankAlias,
+            customerEmail: data.email,
+        });
+
+        navigate("/success", {
+            state: {
+                bankNameKor: signVirtualAccountResponse.bankNameKor,
+                accountNumber: signVirtualAccountResponse.accountNumber,
+            },
+        });
+    };
 
     return (
         <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-                <fieldset className="flex gap-2 w-full">
+                <fieldset className="flex flex-col gap-2 w-full sm:flex-row">
                     <ExamDateField />
                     <ExamAreaField />
                     <ExamSchoolField />
@@ -64,18 +103,21 @@ export default function FormPage() {
 
                 <OrganizationNameField />
 
-                <UserNameField />
-                <GenderField />
+                <fieldset className="flex gap-2 w-full flex-col sm:flex-row">
+                    <GenderField />
+                    <UserNameField />
+                </fieldset>
+
                 <BirthField />
                 <PhoneNumberField />
                 <SubjectField />
                 <LunchField />
-
                 <AdmissionTicketField />
-                <p className="text-red-400">*입금 완료 후 신청서를 제출하세요</p>
+                <BankSelectField />
+                <EmailField />
 
-                <Button type="submit" className="h-[48px] w-full mb-4">
-                    {isPending ? "신청하기" : <Spinner />}
+                <Button type="submit" className="h-[48px] w-full mb-4" disabled={isPending}>
+                    {!isPending ? "신청하기" : <Spinner />}
                 </Button>
             </form>
         </FormProvider>
