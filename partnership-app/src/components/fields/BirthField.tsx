@@ -44,6 +44,7 @@ export const BirthField = () => {
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
                     <Calendar
+                        captionLayout="dropdown"
                         mode="single"
                         selected={watch().birth ? new Date(watch().birth) : undefined}
                         onSelect={(date) => {

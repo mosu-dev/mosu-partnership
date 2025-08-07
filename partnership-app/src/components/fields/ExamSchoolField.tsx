@@ -18,7 +18,7 @@ export const ExamSchoolField = () => {
     const { isPending, data } = useGetExamSchools(watch("examArea"));
 
     return (
-        <div className="space-y-2 w-full">
+        <div className="space-y-2 flex-1/3">
             <Label htmlFor="testSchool" required>
                 응시학교명
             </Label>

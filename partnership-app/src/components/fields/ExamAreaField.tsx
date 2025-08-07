@@ -17,10 +17,10 @@ export const ExamAreaField = () => {
     const { isPending, data } = useGetExamAreas();
 
     return (
-        <div className="space-y-2 w-full">
+        <div className="space-y-2 flex-1/3">
             <Label required>응시 지역</Label>
             <Select value={watch("examArea")} onValueChange={(value) => setValue("examArea", value)}>
-                <SelectTrigger className="w-full ">
+                <SelectTrigger className="w-full">
                     <SelectValue placeholder="응시 지역을 선택해주세요" />
                 </SelectTrigger>
                 <SelectContent>

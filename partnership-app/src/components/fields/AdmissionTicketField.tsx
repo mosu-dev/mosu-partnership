@@ -8,10 +8,7 @@ import { Spinner } from "@/apps/ui/Spinner";
 import type { RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartnerFormSchema";
 
 export const AdmissionTicketField = () => {
-    const {
-        setValue,
-        formState: { errors },
-    } = useFormContext<RegisterPartnerFormSchemaType>();
+    const { setValue } = useFormContext<RegisterPartnerFormSchemaType>();
 
     const {
         FileInput,
@@ -55,7 +52,6 @@ export const AdmissionTicketField = () => {
                 )}
             </div>
             {uploadError && <ErrorMessage>{uploadError}</ErrorMessage>}
-            {errors.admissionTicket && <ErrorMessage>{errors.admissionTicket.message}</ErrorMessage>}
         </div>
     );
 };

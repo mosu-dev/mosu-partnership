@@ -16,9 +16,9 @@ export const LunchField = () => {
         <div className="space-y-3">
             <Label required>점심 도시락 신청 여부</Label>
             <RadioGroup
-                value={watch().lunch ? "yes" : "no"}
+                value={watch("examApplication.isLunchChecked") ? "yes" : "no"}
                 onValueChange={(value) => {
-                    setValue("lunch", value === "yes");
+                    setValue("examApplication.isLunchChecked", value === "yes");
                 }}
             >
                 <div className="flex items-center space-x-2">
@@ -30,7 +30,9 @@ export const LunchField = () => {
                     <Label htmlFor="lunch-no">아니오</Label>
                 </div>
             </RadioGroup>
-            {errors.lunch && <ErrorMessage>{errors.lunch.message}</ErrorMessage>}
+            {errors.examApplication?.isLunchChecked && (
+                <ErrorMessage>{errors.examApplication.isLunchChecked.message}</ErrorMessage>
+            )}
         </div>
     );
 };

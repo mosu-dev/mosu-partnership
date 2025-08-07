@@ -14,16 +14,16 @@ export const GenderField = () => {
     } = useFormContext<RegisterPartnerFormSchemaType>();
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-2 flex-1/3">
             <Label required>성별</Label>
             <Select
-                defaultValue="남자"
+                defaultValue={watch("gender")}
                 value={watch("gender")}
                 onValueChange={(value) => {
                     setValue("gender", value as "남자" | "여자");
                 }}
             >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                     <SelectValue placeholder="성별을 선택해주세요" />
                 </SelectTrigger>
                 <SelectContent>

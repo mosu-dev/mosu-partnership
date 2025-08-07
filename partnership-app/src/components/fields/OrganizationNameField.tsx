@@ -11,7 +11,7 @@ export const OrganizationNameField = () => {
     } = useFormContext<RegisterPartnerFormSchemaType>();
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-2 w-full">
             <Label htmlFor="partnerCompany" required>
                 제휴 업체명
             </Label>
