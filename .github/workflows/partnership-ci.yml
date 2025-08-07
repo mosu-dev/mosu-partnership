@@ -5,16 +5,13 @@ on:
         branches:
             - main
             - develop
-        types:
-            - closed
         paths:
-            - "partnership-app"
+            - "partnership-app/**"
     workflow_dispatch:
 
 jobs:
     build-and-test:
         runs-on: ubuntu-latest
-        if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
 
         steps:
             - name: Checkout code
@@ -28,16 +25,19 @@ jobs:
 
             - name: Install Dependencies
               run: yarn install --frozen-lockfile
+              working-directory: ./partnership-app
 
             - name: Type Check & Lint
-              run: yarn app lint
+              run: yarn lint
+              working-directory: ./partnership-app
 
             - name: Build
-              run: yarn app build
+              run: yarn build
+              working-directory: ./partnership-app
 
             - name: Archive Build Artifacts
               uses: actions/upload-artifact@v4
               with:
                   name: build-files
-                  path: dist/
+                  path: partnership-app/dist/
                   retention-days: 7
