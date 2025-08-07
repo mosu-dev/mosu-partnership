@@ -1,0 +1,43 @@
+name: Partnership CI
+
+on:
+    pull_request:
+        branches:
+            - main
+            - develop
+        types:
+            - closed
+        paths:
+            - "partnership-app"
+    workflow_dispatch:
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+        if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "22"
+                  cache: "yarn"
+
+            - name: Install Dependencies
+              run: yarn install --frozen-lockfile
+
+            - name: Type Check & Lint
+              run: yarn lint
+
+            - name: Build
+              run: yarn build
+
+            - name: Archive Build Artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build-files
+                  path: dist/
+                  retention-days: 7
