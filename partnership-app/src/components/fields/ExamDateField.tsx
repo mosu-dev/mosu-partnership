@@ -7,6 +7,7 @@ import { type RegisterPartnerFormSchemaType } from "@/apps/models/RegisterPartne
 export const ExamDateField = () => {
     const { examYear, examMonth, examDate } = useRegisterDate();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { setValue } = useFormContext<RegisterPartnerFormSchemaType>();
     // setValue("examDate.year", examYear);
     // setValue("examDate.month", examMonth);

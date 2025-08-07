@@ -29,8 +29,7 @@ export const useGetExams = () => {
     return useQuery({
         queryKey: ["EXAMS"],
         queryFn: getExams,
-        select: (data) => {
-            
-        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        select: (data) => {},
     });
 };
