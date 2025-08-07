@@ -63,6 +63,13 @@ jobs:
                   echo " Deployed to: https://mosu-partnership.s3.amazonaws.com/"
               working-directory: ./partnership-app
 
+            - name: Invalidate CloudFront Cache
+              run: |
+                  aws cloudfront create-invalidation \
+                    --distribution-id ${{ secrets.MOSU_PARTNERSHIP_CLOUDFRONT_DISTRIBUTION_ID }} \
+                    --paths "/*"
+                  echo "✅ CloudFront cache invalidated!"
+
             - name: Deployment Complete
               run: |
                   echo "✅ Deployment successful!"
