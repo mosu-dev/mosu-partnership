@@ -1,0 +1,31 @@
+export const banks = [
+    { value: "경남", label: "경남은행" },
+    { value: "광주", label: "광주은행" },
+    { value: "단위농협", label: "단위농협(지역농축협)" },
+    { value: "부산", label: "부산은행" },
+    { value: "새마을", label: "새마을금고" },
+    { value: "산림", label: "산림조합" },
+    { value: "신한", label: "신한은행" },
+    { value: "신협", label: "신협" },
+    { value: "씨티", label: "씨티은행" },
+    { value: "우리", label: "우리은행" },
+    { value: "우체국", label: "우체국예금보험" },
+    { value: "저축", label: "저축은행중앙회" },
+    { value: "전북", label: "전북은행" },
+    { value: "제주", label: "제주은행" },
+    { value: "카카오", label: "카카오뱅크" },
+    { value: "케이", label: "케이뱅크" },
+    { value: "토스", label: "토스뱅크" },
+    { value: "하나", label: "하나은행" },
+    { value: "-", label: "홍콩상하이은행" },
+    { value: "기업", label: "IBK기업은행" },
+    { value: "국민", label: "KB국민은행" },
+    { value: "대구", label: "iM뱅크(대구)" },
+    { value: "산업", label: "한국산업은행" },
+    { value: "농협", label: "NH농협은행" },
+    { value: "SC제일", label: "SC제일은행" },
+    { value: "수협", label: "Sh수협은행" },
+] as const;
+
+export const BANK_ENUMS = banks.map((bank) => bank.value);
+export type BankType = (typeof banks)[number]["value"];
