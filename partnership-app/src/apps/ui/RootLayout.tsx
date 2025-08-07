@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 export const RootLayout = () => {
     return (
-        <main className="min-h-screen container mx-auto p-4 max-w-2xl">
+        <main className="min-h-screen mx-auto p-4 w-full max-w-[640px]">
             <MosuLogo />
             <Outlet />
         </main>
