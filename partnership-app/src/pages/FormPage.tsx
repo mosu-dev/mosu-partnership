@@ -60,36 +60,40 @@ export default function FormPage() {
     const isPending = isRegisterGuestPending || isSignVirtualAccountPending;
 
     const onSubmit = async (data: RegisterPartnerFormSchemaType) => {
-        const registerGuestResponse = await registerGuest({
-            orgName: data.orgName,
-            gender: data.gender,
-            userName: data.userName,
-            birth: data.birth,
-            phoneNumber: data.phoneNumber,
-            examApplication: {
-                examId: data.examApplication.examId,
-                isLunchChecked: data.examApplication.isLunchChecked,
-            },
-            subjects: data.subjects,
-            admissionTicket: {
-                fileName: data.admissionTicket.fileName,
-                s3Key: data.admissionTicket.s3Key,
-            },
-        });
+        try {
+            const registerGuestResponse = await registerGuest({
+                orgName: data.orgName,
+                gender: data.gender,
+                userName: data.userName,
+                birth: data.birth,
+                phoneNumber: data.phoneNumber,
+                examApplication: {
+                    examId: data.examApplication.examId,
+                    isLunchChecked: data.examApplication.isLunchChecked,
+                },
+                subjects: data.subjects,
+                admissionTicket: {
+                    fileName: data.admissionTicket.fileName,
+                    s3Key: data.admissionTicket.s3Key,
+                },
+            });
 
-        const signVirtualAccountResponse = await signVirtualAccount({
-            applicationId: registerGuestResponse.applicationId,
-            customerName: data.userName,
-            alias: data.bankAlias,
-            customerEmail: data.email,
-        });
+            const signVirtualAccountResponse = await signVirtualAccount({
+                applicationId: registerGuestResponse.applicationId,
+                customerName: data.userName,
+                alias: data.bankAlias,
+                customerEmail: data.email,
+            });
 
-        navigate("/success", {
-            state: {
-                bankNameKor: signVirtualAccountResponse.bankNameKor,
-                accountNumber: signVirtualAccountResponse.accountNumber,
-            },
-        });
+            navigate("/success", {
+                state: {
+                    bankNameKor: signVirtualAccountResponse.bankNameKor,
+                    accountNumber: signVirtualAccountResponse.accountNumber,
+                },
+            });
+        } catch {
+            alert("신청에 실패했습니다. 다시 시도해주세요.");
+        }
     };
 
     return (
