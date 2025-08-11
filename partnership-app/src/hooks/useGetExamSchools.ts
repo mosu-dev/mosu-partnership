@@ -29,5 +29,6 @@ export const useGetExamSchools = (areaName: string) => {
     return useQuery({
         queryKey: ["EXAM_SCHOOLS", areaName],
         queryFn: () => getExamSchools(areaName),
+        enabled: !!areaName,
     });
 };
