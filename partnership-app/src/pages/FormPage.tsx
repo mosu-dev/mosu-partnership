@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -25,6 +25,7 @@ import { useRegisterGuest } from "@/hooks/useRegisterGuest";
 import { BankSelectField } from "@/components/fields/BankSelectField";
 import { useVirtualAccount } from "@/hooks/useVirtualAccount";
 import { EmailField } from "@/components/fields/EmailField";
+import { toast } from "react-toastify";
 
 export default function FormPage() {
     const { examYear, examMonth, examDate } = useRegisterDate();
@@ -97,9 +98,26 @@ export default function FormPage() {
         }
     };
 
+    const onInvalid = (errors: FieldErrors<RegisterPartnerFormSchemaType>) => {
+        // 첫 번째 오류 메시지를 찾아서 toast로 표시
+        const firstErrorKey = Object.keys(errors)[0];
+        const firstError = errors[firstErrorKey as keyof typeof errors];
+
+        if (firstError?.message) {
+            toast.error(firstError.message);
+        } else if (firstError && typeof firstError === "object") {
+            const nestedErrors = firstError as Record<string, { message?: string }>;
+            const nestedErrorKey = Object.keys(nestedErrors)[0];
+            const nestedError = nestedErrors[nestedErrorKey];
+            if (nestedError?.message) {
+                toast.error(nestedError.message);
+            }
+        }
+    };
+
     return (
         <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={methods.handleSubmit(onSubmit, onInvalid)} className="space-y-6">
                 <fieldset className="flex flex-col gap-2 w-full sm:flex-row">
                     <ExamDateField />
                     <ExamAreaField />
