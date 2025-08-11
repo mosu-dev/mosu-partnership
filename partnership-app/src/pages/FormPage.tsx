@@ -34,6 +34,7 @@ export default function FormPage() {
     const methods = useForm<RegisterPartnerFormSchemaType>({
         resolver: zodResolver(RegisterPartnerFormSchema),
         mode: "onChange",
+        shouldFocusError: false,
         defaultValues: {
             examDate: {
                 year: examYear,
@@ -99,7 +100,6 @@ export default function FormPage() {
     };
 
     const onInvalid = (errors: FieldErrors<RegisterPartnerFormSchemaType>) => {
-        // 첫 번째 오류 메시지를 찾아서 toast로 표시
         const firstErrorKey = Object.keys(errors)[0];
         const firstError = errors[firstErrorKey as keyof typeof errors];
 
