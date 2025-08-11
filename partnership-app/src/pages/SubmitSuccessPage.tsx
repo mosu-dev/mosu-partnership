@@ -17,12 +17,14 @@ export default function SubmitSuccessPage() {
                 <p className="text-md text-center text-[#909090] mb-0">
                     2일 내에 가상계좌로 입금완료시 신청이 완료됩니다.
                 </p>
-                <div className="p-4 bg-gray-50 rounded-md w-[350px]">
+                <div className="p-4 bg-gray-50 space-y- rounded-md w-[350px]">
                     <p className="flex justify-between">
                         <span>- 계좌번호:</span>
-                        <span className="font-semibold">
-                            {accountNumber} ({bankNameKor})
-                        </span>
+                        <span className="font-semibold">{accountNumber}</span>
+                    </p>
+                    <p className="flex justify-between">
+                        <span>- 은행명:</span>
+                        <span className="font-semibold">{bankNameKor}</span>
                     </p>
                     <p className="flex justify-between">
                         <span>- 응시료:</span>
