@@ -2,7 +2,11 @@ import imgComplete from "@/assets/img-complete.png";
 import { useLocation } from "react-router-dom";
 
 export default function SubmitSuccessPage() {
-    const { bankNameKor, accountNumber } = useLocation().state;
+    const { bankNameKor, accountNumber, isLunchBox } = useLocation().state;
+
+    const examFee = 40000;
+    const lunchFee = isLunchBox ? 9000 : 0;
+    const totalFee = examFee + lunchFee;
 
     return (
         <div className="my-20 flex flex-col items-center gap-10">
@@ -13,12 +17,27 @@ export default function SubmitSuccessPage() {
                 <p className="text-md text-center text-[#909090] mb-0">
                     2일 내에 가상계좌로 입금완료시 신청이 완료됩니다.
                 </p>
-                <p>
-                    계좌번호 : &nbsp;
-                    <span className="font-semibold">
-                        {accountNumber} ({bankNameKor})
-                    </span>
-                </p>
+                <div className="p-4 bg-gray-50 rounded-md">
+                    <p className="flex justify-between">
+                        <span>- 계좌번호:</span>
+                        <span className="font-semibold">
+                            {accountNumber} ({bankNameKor})
+                        </span>
+                    </p>
+                    <p className="flex justify-between">
+                        <span>- 응시료:</span>
+                        <span className="font-semibold">{examFee.toLocaleString()}원</span>
+                    </p>
+                    <p className="flex justify-between">
+                        <span>- 점심 도시락:</span>
+                        <span className="font-semibold">{lunchFee.toLocaleString()}원</span>
+                    </p>
+                    <hr className="my-2" />
+                    <p className="flex justify-between">
+                        <span>- 총 입금액:</span>
+                        <span className="font-semibold">{totalFee.toLocaleString()}원</span>
+                    </p>
+                </div>
             </div>
         </div>
     );

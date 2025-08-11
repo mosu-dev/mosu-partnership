@@ -89,6 +89,7 @@ export default function FormPage() {
                 state: {
                     bankNameKor: signVirtualAccountResponse.bankNameKor,
                     accountNumber: signVirtualAccountResponse.accountNumber,
+                    isLunchBox: data.examApplication.isLunchChecked,
                 },
             });
         } catch {
